@@ -1,0 +1,170 @@
+﻿<UserControl x:Class="SOPlus37.Views.SubscriberServicesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <Border Background="#FFF7ED" BorderBrush="#FED7AA" BorderThickness="1"
+                    CornerRadius="12" Padding="12">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <TextBlock Text="Загрузка..." Foreground="#9A3412" FontSize="13"/>
+            </Border>
+
+            <Border Background="#FEF2F2" BorderBrush="#FECACA" BorderThickness="1"
+                    CornerRadius="12" Padding="12" Margin="0,10,0,0">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Error}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Error}" Value="">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <TextBlock Text="{Binding Error}" Foreground="#DC2626" FontSize="13" TextWrapping="Wrap"/>
+            </Border>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Background="White" BorderBrush="#E7ECF5" BorderThickness="1"
+                    CornerRadius="16" Padding="16" Margin="0,0,0,12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Подключенные услуги" FontSize="16" FontWeight="Bold" Foreground="#0F172A"/>
+
+                    <DataGrid Grid.Row="1"
+                              ItemsSource="{Binding ConnectedServices}"
+                              SelectedItem="{Binding SelectedConnected}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              HeadersVisibility="Column"
+                              GridLinesVisibility="None"
+                              RowHeaderWidth="0"
+                              BorderThickness="0"
+                              Background="White"
+                              Margin="0,12,0,12"
+                              CanUserResizeColumns="True"
+                              CanUserSortColumns="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Название" Binding="{Binding ServiceName}" Width="1.5*"/>
+                            <DataGridTextColumn Header="Тип" Binding="{Binding TypeText}" Width="80"/>
+                            <DataGridTextColumn Header="Стоимость (₽)" Binding="{Binding Cost, StringFormat={}{0:N2}}" Width="100"/>
+
+                            <DataGridTemplateColumn Header="Описание" Width="3.5*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Description}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   ToolTip="{Binding Description}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Обновить"
+                                Command="{Binding RefreshCommand}"
+                                Height="36"
+                                Margin="0,0,10,0"
+                                Background="#3B82F6"
+                                Foreground="White"
+                                BorderThickness="0"
+                                Padding="14,8"/>
+
+                        <Button Content="Отключить выбранную"
+                                Command="{Binding DisconnectCommand}"
+                                Height="36"
+                                Background="#EF4444"
+                                Foreground="White"
+                                BorderThickness="0"
+                                Padding="14,8"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="1" Background="White" BorderBrush="#E7ECF5" BorderThickness="1"
+                    CornerRadius="16" Padding="16">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Доступные услуги" FontSize="16" FontWeight="Bold" Foreground="#0F172A"/>
+
+                    <DataGrid Grid.Row="1"
+                              ItemsSource="{Binding AvailableServices}"
+                              SelectedItem="{Binding SelectedAvailable}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              HeadersVisibility="Column"
+                              GridLinesVisibility="None"
+                              RowHeaderWidth="0"
+                              BorderThickness="0"
+                              Background="White"
+                              Margin="0,12,0,12"
+                              CanUserResizeColumns="True"
+                              CanUserSortColumns="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Название" Binding="{Binding ServiceName}" Width="1.5*"/>
+                            <DataGridTextColumn Header="Тип" Binding="{Binding TypeText}" Width="80"/>
+                            <DataGridTextColumn Header="Стоимость (₽)" Binding="{Binding Cost, StringFormat={}{0:N2}}" Width="100"/>
+
+                            <DataGridTemplateColumn Header="Описание" Width="3.5*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Description}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   ToolTip="{Binding Description}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Button Grid.Row="2"
+                            Content="Подключить выбранную"
+                            Command="{Binding ConnectCommand}"
+                            Height="36"
+                            Background="#0F172A"
+                            Foreground="White"
+                            BorderThickness="0"
+                            Padding="14,8"
+                            HorizontalAlignment="Right"/>
+                </Grid>
+            </Border>
+
+        </Grid>
+    </Grid>
+</UserControl>

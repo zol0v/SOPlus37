@@ -1,0 +1,142 @@
+﻿<UserControl x:Class="SOPlus37.Views.SubscriberSmsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Background="White"
+                BorderBrush="#E7ECF5"
+                BorderThickness="1"
+                CornerRadius="16"
+                Padding="18"
+                Margin="0,0,0,14">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="0,0,14,0">
+                    <TextBlock Text="Период с" Foreground="#64748B" FontSize="12" Margin="0,0,0,6"/>
+                    <DatePicker SelectedDate="{Binding DateFrom}" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Margin="0,0,14,0">
+                    <TextBlock Text="Период по" Foreground="#64748B" FontSize="12" Margin="0,0,0,6"/>
+                    <DatePicker SelectedDate="{Binding DateTo}" />
+                </StackPanel>
+
+                <Button Grid.Column="2"
+                        Content="Показать"
+                        Command="{Binding RefreshCommand}"
+                        Padding="18,10"
+                        Height="34"
+                        Margin="0,18,0,0"
+                        Background="#3b82f6"
+                        Foreground="White"
+                        BorderThickness="0"/>
+
+                <Button Grid.Column="3"
+                        Content="Сформировать PDF отчет"
+                        Command="{Binding GeneratePdfReportCommand}"
+                        Padding="18,10"
+                        Height="34"
+                        Margin="15,18,0,0"
+                        Background="#0f172a"
+                        Foreground="White"
+                        BorderThickness="0"/>
+            </Grid>
+        </Border>
+
+        <StackPanel Grid.Row="1" Margin="0,0,0,14">
+            <Border Background="#FFF7ED" BorderBrush="#FED7AA" BorderThickness="1"
+                    CornerRadius="12" Padding="12">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <TextBlock Text="Загрузка SMS..." Foreground="#9A3412" FontSize="13"/>
+            </Border>
+
+            <Border Background="#FEF2F2" BorderBrush="#FECACA" BorderThickness="1"
+                    CornerRadius="12" Padding="12" Margin="0,10,0,0">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Error}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Error}" Value="">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <TextBlock Text="{Binding Error}" Foreground="#DC2626" FontSize="13" TextWrapping="Wrap"/>
+            </Border>
+        </StackPanel>
+
+        <Border Grid.Row="2"
+                Background="White"
+                BorderBrush="#E7ECF5"
+                BorderThickness="1"
+                CornerRadius="16"
+                Padding="18">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Список SMS"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Foreground="#0F172A"
+                           Margin="0,0,0,12"/>
+
+                <DataGrid Grid.Row="1"
+                          ItemsSource="{Binding Sms}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="None"
+                          RowHeaderWidth="0"
+                          BorderThickness="0"
+                          Background="White">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Получатель"
+                                            Binding="{Binding SmsedNumber}"
+                                            Width="*"/>
+
+                        <DataGridTextColumn Header="Дата и время"
+                                            Binding="{Binding SmsDateTime, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
+                                            Width="*"/>
+
+                        <DataGridTextColumn Header="Стоимость"
+                                            Binding="{Binding Cost, StringFormat={}{0:N2} ₽}"
+                                            Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+    </Grid>
+</UserControl>
